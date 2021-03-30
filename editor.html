@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charse="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="./lib/jquery-3.4.1.js"></script>
+<script src="./lib/js-beautify/beautify.js"></script>
+<script src="./lib/js-beautify/beautify-css.js"></script>
+<script src="./lib/js-beautify/beautify-html.js"></script>
+<style>
+body , html { 
+background: rgb(31, 31, 31);
+height: 100%;
+width: 100%;
+padding:0;
+margin: 0;
+}
+#editor { 
+height: 80%;
+width: 98%;
+background: rgb(31, 31, 31);
+outline: 0;
+border:0;
+caret-color: dodgerblue;
+font-size: 18px;
+padding: 60px 10px;
+color: #fff;
+white-space: nowrap;
+text-decoration: none;
+}
+.lists { 
+ color: #fff;
+  position: fixed;
+  left: 0;
+  right:0;
+ background: #000;
+ overflow: auto;
+ max-width: 100%;
+white-space: nowrap;
+}
+
+.lists::-webkit-scrollbar {
+  height: 5px;
+  width: 2px;
+}
+
+.lists::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lists::-webkit-scrollbar-thumb {
+  background: rgba(233,244,255,0.5);
+}
+
+.lists:nth-child(3) { 
+ bottom: 0;
+background: #000;;
+padding: 5px;
+max-height: 50px;
+
+}
+.lists:nth-child(2) { 
+ top:0;
+padding: 10px;
+
+}
+.elem { 
+
+}
+.elem2, .elem { 
+padding: 5px 10px;
+background: #333;
+margin: 3px;
+white-space: nowrap;
+text-align: center;
+display: inline-flex;
+border-radius: 5px;
+width: auto;
+}
+.elem:hover, .elem2:hover { 
+   background: dodgerblue;
+}
+#options_list { 
+display: none;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+position: fixed;
+z-index: 100;
+height: 100%;
+width: 100%;
+background: rgba(0,0,0,0.8);
+top:0;
+left:0;
+right:0;
+bottom:0;
+overflow: scroll;
+}
+</style>
+</head>
+<body>
+
+<textarea id="editor"></textarea>
+<div id="list" class="lists">
+<div class="elem" id="beautify">
+Beautify
+</div>
+<div class="elem">
+Save
+</div>
+<div class="elem">
+<div>Options</div>
+<div id="options_list">
+<div>Zoom In</div>
+<div>Zoom Out</div>
+<div class="active">Word Wrap [nowrap]</div>
+<div>Word Wrap [normal]</div>
+<div>console.log [testing, debug]</div>
+</div>
+</div>
+</div>
+
+<div id="foot-list" class="lists">
+<div class="elem2" id="_4Spaces">
+4 space
+</div>
+<div class="elem2" id="html_markers">
+<  >
+</div>
+<div class="elem2" id="curly_brackets">
+{ }
+</div>
+<div class="elem2" id="parentheses">
+(  )
+</div>
+<div class="elem2" id="tab">
+Tab
+</div>
+<div class="elem2" id="undo">
+Undo
+</div>
+<div class="elem2" id="rendo">
+Rindo
+</div>
+<div class="elem2" id="live_result">
+Live Results show
+</div>
+<div class="elem2" id="multi_selection">
+Multi Line Selection
+</div>
+</div>
+
+<script>
+
+window.addEventListener("load", function () { 
+
+var html_tags = {},
+ html_attributes = {}, 
+ css_properties = {}, 
+ css_properties_values = {},
+JavaScript = {}
+
+//Elements
+var textarea = document.getElementById("editor"),
+ t = $("textarea"),
+beautify_btn = document.getElementById("beautify")
+
+//Menu Btn's Actions
+var html_markers = document.getElementById("html_markers"),
+curly_brackets = document.getElementById("curly_brackets"),
+parentheses = document.getElementById("parentheses"),
+tab = document.getElementById("tab"),
+undo = document.getElementById("undo"),
+rendo = document.getElementById("rendo"),
+live_result = document.getElementById("live_result"),
+multi_selection = document.getElementById("multi_selection");
+
+var beautify = { 
+"html": function (_html, html_options) { 
+    return html_beautify(_html, html_options);
+  },
+"css": function (_css, css_options) { 
+    return css_beautify(_css, css_options);
+  },
+"js": function (_js, js_options) { 
+    return js_beautify(_js, js_options);
+  }
+}
+
+var get_selection_position = function() { 
+    
+}
+
+
+
+setTimeout(()=> {
+textarea.focus();
+//textarea.style.background = "#1c1d22";
+}, 100);
+textarea.addEventListener("keyup", function () {
+   selection = Window.getSelection();
+   $("textarea").focus()
+});
+beautify_btn.addEventListener("click", function () {
+   let beauty = function(txt, file_ext, opt) { 
+   if(file_ext !== undefined && !file_ext.match(/html|css|js/ig)) { 
+     file_ext = "html";
+   }
+   if(opt === undefined && file_ext !== undefined) { 
+      return beautify[file_ext](txt, { indent_size: 4, space_in_empty_paren: true })
+    } else if(file_ext !== undefined && opt !== undefined) { 
+        return beautify[file_ext](txt, opt)
+     }
+  }
+  $("textarea").val(beauty($("textarea").val() , "html"));
+   
+});
+})
+</script>
+</body>
+</html>
